@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+</head>
+<body>
+    <h1>Notes</h1>
+
+    <div th:if="${notes.isEmpty()}">
+        <p>No notes yet.</p>
+    </div>
+
+    <div th:each="note : ${notes}">
+        <h2 th:text="${note.title}">Note title</h2>
+        <p th:text="${note.content}">Note content</p>
+
+        <a th:href="@{/note/edit(id=${note.id})}">Edit</a>
+
+        <form th:action="@{/note/delete}" method="post">
+            <input type="hidden" name="id" th:value="${note.id}">
+            <button type="submit">Delete</button>
+        </form>
+
+        <hr>
+    </div>
+</body>
+</html>
