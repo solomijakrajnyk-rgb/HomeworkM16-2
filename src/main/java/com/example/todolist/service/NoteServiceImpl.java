@@ -1,7 +1,7 @@
 package com.example.todolist.service;
 
-import com.example.todolist.dao.NoteDao;
 import com.example.todolist.model.Note;
+import com.example.todolist.repository.NoteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,34 +9,35 @@ import java.util.List;
 @Service
 public class NoteServiceImpl implements NoteService {
 
-    private final NoteDao noteDao;
+    private final NoteRepository noteRepository;
 
-    public NoteServiceImpl(NoteDao noteDao) {
-        this.noteDao = noteDao;
+    public NoteServiceImpl(NoteRepository noteRepository) {
+        this.noteRepository = noteRepository;
     }
 
     @Override
     public List<Note> listAll() {
-        return noteDao.findAll();
+        return noteRepository.findAll();
     }
 
     @Override
     public Note add(Note note) {
-        return noteDao.save(note);
+        return noteRepository.save(note);
     }
 
     @Override
     public void deleteById(long id) {
-        noteDao.deleteById(id);
+        noteRepository.deleteById(id);
     }
 
     @Override
     public void update(Note note) {
-        noteDao.save(note);
+        noteRepository.save(note);
     }
 
     @Override
     public Note getById(long id) {
-        return noteDao.findById(id);
+        return noteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Note with id " + id + " not found"));
     }
 }

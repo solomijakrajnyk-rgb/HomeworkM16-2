@@ -1,8 +1,17 @@
 package com.example.todolist.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Note {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String title;
     private String content;
 
@@ -11,6 +20,11 @@ public class Note {
 
     public Note(long id, String title, String content) {
         this.id = id;
+        this.title = title;
+        this.content = content;
+    }
+
+    public Note(String title, String content) {
         this.title = title;
         this.content = content;
     }
