@@ -1,11 +1,9 @@
-
-
 package com.example.todolist.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class CreateNoteRequest {
+public class NoteRequestDto {
 
     @NotBlank(message = "Title must not be blank")
     @Size(max = 255, message = "Title must not exceed 255 characters")
@@ -15,10 +13,10 @@ public class CreateNoteRequest {
     @Size(max = 1000, message = "Content must not exceed 1000 characters")
     private String content;
 
-    public CreateNoteRequest() {
+    public NoteRequestDto() {
     }
 
-    public CreateNoteRequest(String title, String content) {
+    public NoteRequestDto(String title, String content) {
         this.title = title;
         this.content = content;
     }

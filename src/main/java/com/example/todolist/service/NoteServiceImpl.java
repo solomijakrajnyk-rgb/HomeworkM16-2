@@ -1,5 +1,3 @@
-
-
 package com.example.todolist.service;
 
 import com.example.todolist.dao.NoteDao;
@@ -28,18 +26,22 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void deleteById(long id) {
-        noteDao.deleteById(id);
-    }
-
-    @Override
-    public void update(Note note) {
-        noteDao.save(note);
-    }
-
-    @Override
     public Note getById(long id) {
         return noteDao.findById(id)
                 .orElseThrow(() -> new NoteNotFoundException(id));
+    }
+
+    @Override
+    public void update(long id, Note note) {
+        Note existingNote = getById(id);
+        existingNote.setTitle(note.getTitle());
+        existingNote.setContent(note.getContent());
+        noteDao.save(existingNote);
+    }
+
+    @Override
+    public void deleteById(long id) {
+        getById(id);
+        noteDao.deleteById(id);
     }
 }

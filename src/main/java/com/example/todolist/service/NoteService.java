@@ -10,9 +10,9 @@ public interface NoteService {
 
     Note add(Note note);
 
-    void deleteById(long id);
-
-    void update(Note note);
-
     Note getById(long id);
+
+    void update(long id, Note note);
+
+    void deleteById(long id);
 }

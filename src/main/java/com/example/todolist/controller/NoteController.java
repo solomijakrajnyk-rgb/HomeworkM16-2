@@ -1,10 +1,8 @@
-
-
 package com.example.todolist.controller;
 
-import com.example.todolist.dto.CreateNoteRequest;
-import com.example.todolist.dto.UpdateNoteRequest;
-import com.example.todolist.model.Note;
+import com.example.todolist.dto.NoteRequestDto;
+import com.example.todolist.dto.NoteResponseDto;
+import com.example.todolist.mapper.NoteMapper;
 import com.example.todolist.service.NoteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -25,48 +23,52 @@ import java.util.List;
 public class NoteController {
 
     private final NoteService noteService;
+    private final NoteMapper noteMapper;
 
-    public NoteController(NoteService noteService) {
+    public NoteController(NoteService noteService, NoteMapper noteMapper) {
         this.noteService = noteService;
+        this.noteMapper = noteMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<Note>> getAllNotes() {
-        return ResponseEntity.ok(noteService.listAll());
+    public ResponseEntity<List<NoteResponseDto>> getAllNotes() {
+        return ResponseEntity.ok(
+                noteService.listAll()
+                        .stream()
+                        .map(noteMapper::toDto)
+                        .toList()
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Note> getNoteById(@PathVariable long id) {
-        return ResponseEntity.ok(noteService.getById(id));
+    public ResponseEntity<NoteResponseDto> getNoteById(@PathVariable long id) {
+        return ResponseEntity.ok(
+                noteMapper.toDto(noteService.getById(id))
+        );
     }
 
     @PostMapping
-    public ResponseEntity<Note> createNote(
-            @Valid @RequestBody CreateNoteRequest request) {
+    public ResponseEntity<NoteResponseDto> createNote(
+            @Valid @RequestBody NoteRequestDto request) {
 
-        Note note = new Note(request.getTitle(), request.getContent());
-        Note createdNote = noteService.add(note);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdNote);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(noteMapper.toDto(noteService.add(noteMapper.fromDto(request))));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Note> updateNote(
+    public ResponseEntity<NoteResponseDto> updateNote(
             @PathVariable long id,
-            @Valid @RequestBody UpdateNoteRequest request) {
+            @Valid @RequestBody NoteRequestDto request) {
 
-        Note note = noteService.getById(id);
-        note.setTitle(request.getTitle());
-        note.setContent(request.getContent());
+        noteService.update(id, noteMapper.fromDto(request));
 
-        noteService.update(note);
-
-        return ResponseEntity.ok(note);
+        return ResponseEntity.ok(
+                noteMapper.toDto(noteService.getById(id))
+        );
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNote(@PathVariable long id) {
-        noteService.getById(id);
         noteService.deleteById(id);
 
         return ResponseEntity.noContent().build();
