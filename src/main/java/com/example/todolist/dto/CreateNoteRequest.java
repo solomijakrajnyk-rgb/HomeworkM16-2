@@ -1,20 +1,11 @@
 
 
-package com.example.todolist.model;
+package com.example.todolist.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@Entity
-public class Note {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class CreateNoteRequest {
 
     @NotBlank(message = "Title must not be blank")
     @Size(max = 255, message = "Title must not exceed 255 characters")
@@ -24,26 +15,12 @@ public class Note {
     @Size(max = 1000, message = "Content must not exceed 1000 characters")
     private String content;
 
-    public Note() {
+    public CreateNoteRequest() {
     }
 
-    public Note(long id, String title, String content) {
-        this.id = id;
+    public CreateNoteRequest(String title, String content) {
         this.title = title;
         this.content = content;
-    }
-
-    public Note(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getTitle() {
